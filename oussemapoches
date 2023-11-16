@@ -1,0 +1,20 @@
+#include<stdio.h>
+typedef struct
+{
+    int jour, mois, annee;
+} date;
+
+typedef struct
+{
+    date d_d;
+    char id[20];
+    int NbrePoches;
+    char type[3];
+    char urgent[3];
+} demande;
+
+void ajouter(demande d);
+void modifier(demande nouv_d);
+void supprimer(char id[20]);
+
+	
