@@ -1,0 +1,239 @@
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
+#include <gtk/gtk.h>
+
+#include "callbacks.h"
+#include "interface.h"
+#include "support.h"
+#include "sarradonneur.h"
+#include<stdio.h> 
+#include<string.h>
+#include<stdlib.h>
+
+
+int i=1 ,i2=1;
+int choix[]={0,0},choix2[]={0,0};
+
+
+
+void
+on_ajouterdonneursarra_clicked (GtkWidget *objet_graphique, gpointer user_data)
+{
+GtkWidget * nom , *prenom , *cin , *age ,*homme ,*femme ,*typs ,*pos , *neg, *output;
+
+donneur d ;
+int x ,a;
+char sang[20] ,agee[20];
+nom= lookup_widget(objet_graphique, "Nomsarra1") ;
+prenom= lookup_widget(objet_graphique, "prenomsarra1") ;
+cin= lookup_widget(objet_graphique, "CINsarra1") ;
+age= lookup_widget(objet_graphique, "agesarra1") ;
+homme= lookup_widget(objet_graphique, "hommesarra") ;
+femme= lookup_widget(objet_graphique, "femmesarra") ;
+typs= lookup_widget(objet_graphique, "listesangsarra") ;
+pos= lookup_widget(objet_graphique, "positif") ;
+neg= lookup_widget(objet_graphique, "negatif") ;
+output= lookup_widget(objet_graphique, "labelajout") ;
+
+
+strcpy(d.nom, gtk_entry_get_text(GTK_ENTRY(nom)));
+strcpy(d.prenom, gtk_entry_get_text(GTK_ENTRY(prenom)));
+strcpy(d.cin, gtk_entry_get_text(GTK_ENTRY(cin)));
+typesangradio(i ,d.sexe);
+strcpy(d.typs, gtk_combo_box_get_active_text(GTK_COMBO_BOX(typs)));
+posneg(choix,d.typs);
+a=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(age));
+sprintf(agee,"%d",a);
+strcpy(d.age,agee);
+
+x= ajouter("donneur.txt",d );
+
+if(x==1)
+	gtk_label_set_text(GTK_LABEL(output),"ajout du donneur avec succés");
+       
+    else gtk_label_set_text(GTK_LABEL(output),"echec d'ajout");
+
+
+
+}
+
+
+void
+on_confirmermodifsarra_clicked (GtkWidget *objet_graphique, gpointer user_data)
+{
+
+GtkWidget * nom , *prenom , *cin , *age ,*homme ,*femme ,*typs ,*pos , *neg, *output;
+
+donneur d ;
+int x ,a;
+char sang[20] ,agee[20];
+nom= lookup_widget(objet_graphique, "Nomsarra1") ;
+prenom= lookup_widget(objet_graphique, "prenomsarra1") ;
+cin= lookup_widget(objet_graphique, "CINsarra1") ;
+age= lookup_widget(objet_graphique, "agesarra1") ;
+homme= lookup_widget(objet_graphique, "hommesarra") ;
+femme= lookup_widget(objet_graphique, "femmesarra") ;
+typs= lookup_widget(objet_graphique, "listesangsarra") ;
+pos= lookup_widget(objet_graphique, "positif") ;
+neg= lookup_widget(objet_graphique, "negatif") ;
+output= lookup_widget(objet_graphique, "labelmodif") ;
+
+
+strcpy(d.nom, gtk_entry_get_text(GTK_ENTRY(nom)));
+strcpy(d.prenom, gtk_entry_get_text(GTK_ENTRY(prenom)));
+strcpy(d.cin, gtk_entry_get_text(GTK_ENTRY(cin)));
+typesangradio(i2 ,d.sexe);
+strcpy(d.typs, gtk_combo_box_get_active_text(GTK_COMBO_BOX(typs)));
+posneg(choix2,d.typs);
+a=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(age));
+sprintf(agee,"%d",a);
+strcpy(d.age,agee);
+
+x=modifier("donneur.txt",d.cin,d );
+
+if(x==1)
+	gtk_label_set_text(GTK_LABEL(output),"modification avec succés");
+       
+    else gtk_label_set_text(GTK_LABEL(output),"echec de modification");
+
+
+
+
+}
+
+
+void
+on_sarraajouterafficher_clicked  (GtkWidget *objet_graphique, gpointer user_data)
+{}
+
+
+void
+on_sarramodifierafficher_clicked  (GtkWidget *objet_graphique, gpointer user_data)
+{
+
+}
+
+
+void
+on_sarrasupprimerafficher_clicked  (GtkWidget *objet_graphique, gpointer user_data)
+{
+
+}
+
+
+void
+on_confirmationsupprimersarra_clicked   (GtkWidget *objet_graphique, gpointer user_data)
+{
+
+int x ;
+char c[20];
+
+GtkWidget * cin , *output ; 
+cin= lookup_widget(objet_graphique, "cinsarrasupprimer2") ;
+output= lookup_widget(objet_graphique, "labelsupprimer") ;
+
+strcpy(c, gtk_entry_get_text(GTK_ENTRY(cin)));
+
+x=supprimer("donneur.txt",c);
+
+    if(x==1)
+	gtk_label_set_text(GTK_LABEL(output),"suppression avec succés");
+       
+    else gtk_label_set_text(GTK_LABEL(output),"echec de suppression");
+}
+
+
+
+void
+on_hommesarra_toggled                  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+if (gtk_toggle_button_get_active(GTK_RADIO_BUTTON(togglebutton))) i=1;
+}
+
+
+void
+on_femmesarra_toggled                  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+if (gtk_toggle_button_get_active(GTK_RADIO_BUTTON(togglebutton))) i=2;
+}
+
+
+void
+on_positif_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+if (gtk_toggle_button_get_active(togglebutton)) choix[0]=1;
+}
+
+
+void
+on_negatif_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+if (gtk_toggle_button_get_active(togglebutton)) choix[1]=1;
+}
+
+
+
+void
+on_hommesarramodif_toggled             (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+if (gtk_toggle_button_get_active(GTK_RADIO_BUTTON(togglebutton))) i2=1;
+}
+
+
+void
+on_femmesarramodif_toggled             (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+if (gtk_toggle_button_get_active(GTK_RADIO_BUTTON(togglebutton))) i2=2;
+}
+
+
+void
+on_positifmodif_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+if (gtk_toggle_button_get_active(togglebutton)) choix2[0]=1;
+}
+
+
+void
+on_negatifmodif_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+if (gtk_toggle_button_get_active(togglebutton)) choix2[1]=1;
+}
+
+
+void
+on_afficherajout_clicked               (GtkButton       *objet,
+                                        gpointer         user_data)
+{
+
+GtkWidget *fenetre_ajout;
+GtkWidget *fenetre_afficher;
+GtkWidget *treeview1;
+
+fenetre_ajout=lookup_widget(objet,"sarraajouter");
+gtk_widget_destroy(fenetre_ajout);
+
+fenetre_afficher=lookup_widget(objet,"sarraaffichage");
+fenetre_afficher=create_fenetre_afficher();
+
+gtk_widget_show(fenetre_afficher);
+
+treeview1=lookup_widget(fenetre_afficher,"treeviewsarra");
+afficher_personne(treeview1);
+
+
+
+
+
+
+}
